@@ -1,10 +1,10 @@
 {
   "name": "Build",
   "tagline": "Trois serveurs Minecraft Java, une seule communauté. Copie l’adresse, colle-la dans Minecraft et joue.",
-  "discord": "",
+  "discord": "https://discord.gg/WvZ44qZwHE",
   "servers": [
     {
-      "name": "Build Mini-Jeux",
+      "name": "Build",
       "mode": "Mini-jeux",
       "ip": "Buildsxie.aternos.me",
       "version": "1.21.11",
@@ -44,7 +44,7 @@
       ]
     },
     {
-      "title": "Mini-jeux",
+      "title": "Build",
       "items": [
         "Ne quitte pas volontairement une partie pour la saboter.",
         "Pas d’alliance ni d’équipe non prévue par le mini-jeu.",
