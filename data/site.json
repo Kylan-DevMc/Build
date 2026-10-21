@@ -1,0 +1,122 @@
+{
+  "name": "Build",
+  "tagline": "Trois serveurs Minecraft Java, une seule communauté. Copie l’adresse, colle-la dans Minecraft et joue.",
+  "discord": "",
+  "servers": [
+    {
+      "name": "Build Mini-Jeux",
+      "mode": "Mini-jeux",
+      "ip": "Buildsxie.aternos.me",
+      "version": "1.21.11",
+      "icon": "🎮",
+      "color": "#2bb4ff",
+      "desc": "Notre serveur principal : enchaîne les mini-jeux avec tes amis et grimpe au classement."
+    },
+    {
+      "name": "Build Bedwars",
+      "mode": "Bedwars",
+      "ip": "BedwarsBuild.aternos.me",
+      "version": "1.21.11",
+      "icon": "🛏️",
+      "color": "#f5a524",
+      "desc": "Protège ton lit, détruis celui des autres et deviens le dernier survivant."
+    },
+    {
+      "name": "Handaria",
+      "mode": "PvP Faction",
+      "ip": "Handaria.aternos.me",
+      "version": "1.21.11",
+      "icon": "⚔️",
+      "color": "#ff5d5d",
+      "desc": "Fonde ta faction, conquiers des territoires et impose-toi sur le champ de bataille."
+    }
+  ],
+  "rules": [
+    {
+      "title": "Règles générales",
+      "items": [
+        "Respecte tous les joueurs et le staff : pas d’insultes, de harcèlement ni de discrimination.",
+        "Les cheats, hacks, x-ray, autoclick et toute modification qui donne un avantage sont interdits.",
+        "Pas de spam, ni de publicité pour un autre serveur.",
+        "N’exploite pas les bugs : signale-les au staff.",
+        "Ne partage pas d’informations personnelles, les tiennes comme celles des autres.",
+        "Les décisions du staff sont à respecter. Pour contester une sanction, contacte l’équipe."
+      ]
+    },
+    {
+      "title": "Mini-jeux",
+      "items": [
+        "Ne quitte pas volontairement une partie pour la saboter.",
+        "Pas d’alliance ni d’équipe non prévue par le mini-jeu.",
+        "Joue le jeu : pas de blocage de spawn ni de piège qui empêche les autres de jouer."
+      ]
+    },
+    {
+      "title": "Bedwars",
+      "items": [
+        "Les équipes sont celles du jeu : pas d’alliance avec une équipe adverse.",
+        "Ne bloque pas définitivement l’accès au spawn ou au lit d’une équipe.",
+        "Ne quitte pas la partie volontairement pour la saboter."
+      ]
+    },
+    {
+      "title": "Handaria (PvP Faction)",
+      "items": [
+        "Le PvP est autorisé, sauf dans les zones protégées comme le spawn.",
+        "Le spawn kill est interdit.",
+        "Respecte les limites d’alliances et de membres annoncées par le staff."
+      ]
+    },
+    {
+      "title": "Sanctions",
+      "items": [
+        "Selon la gravité : avertissement, mute, kick, ban temporaire puis ban définitif.",
+        "Contourner un ban avec un autre compte entraîne un ban définitif."
+      ]
+    }
+  ],
+  "shop": {
+    "intro": "Soutiens ton serveur avec des grades cosmétiques : préfixe, couleur de pseudo et effets. Aucun grade ne donne d’avantage en jeu.",
+    "notice": "La boutique ouvre bientôt. Les prix affichés sont indicatifs, en monnaie du jeu.",
+    "ranks": [
+      {
+        "server": "",
+        "name": "VIP",
+        "price": "2 500 pièces",
+        "color": "#2bb4ff",
+        "perks": [
+          "Préfixe [VIP] dans le chat",
+          "Pseudo coloré",
+          "Rôle VIP sur le Discord"
+        ],
+        "url": ""
+      },
+      {
+        "server": "",
+        "name": "VIP+",
+        "price": "6 000 pièces",
+        "color": "#a96bff",
+        "perks": [
+          "Tout le grade VIP",
+          "Préfixe [VIP+] dans le chat",
+          "Particules de déplacement",
+          "Message de connexion personnalisé"
+        ],
+        "url": ""
+      },
+      {
+        "server": "",
+        "name": "Légende",
+        "price": "12 000 pièces",
+        "color": "#f5a524",
+        "perks": [
+          "Tout le grade VIP+",
+          "Préfixe [Légende] dans le chat",
+          "Effet de victoire exclusif",
+          "Salon Discord réservé"
+        ],
+        "url": ""
+      }
+    ]
+  }
+}
