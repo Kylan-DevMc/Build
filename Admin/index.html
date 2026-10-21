@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Administration – Build</title>
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060b16;--panel:#0c1526;--line:#1b2a45;--tx:#e7efff;--mu:#93a6c6;--b1:#2bb4ff;--ink:#04101f;--hd:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;--bd:"Instrument Sans",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:400 1rem/1.5 var(--bd);min-height:100vh;padding:2rem 1rem 4rem}
+:focus-visible{outline:3px solid var(--b1);outline-offset:2px}
+.box{width:min(760px,100%);margin:0 auto}
+.top{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem}.top img{width:44px;border-radius:11px}.top h1{font:800 1.5rem var(--hd);flex:1}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.3rem;margin-bottom:1rem}
+.lock{max-width:380px;margin:12vh auto 0;text-align:center}.lock img{width:90px;border-radius:20px;margin-bottom:1rem}
+h2{font:800 1.2rem var(--hd);margin-bottom:.8rem}
+label{display:block;font-size:.9rem;color:var(--mu);margin:.7rem 0 .25rem}
+input,textarea{width:100%;background:#0a1222;border:1px solid var(--line);border-radius:9px;color:var(--tx);padding:.6rem .75rem;font:inherit}
+input[type=color]{padding:.15rem;height:42px;width:80px}textarea{min-height:70px;resize:vertical}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}.g .full{grid-column:1/-1}
+.btn{border:0;border-radius:10px;cursor:pointer;font:600 1rem var(--bd);padding:.7rem 1.3rem;background:linear-gradient(135deg,var(--b1),#1b8ef0);color:var(--ink)}
+.btn.s{background:transparent;color:var(--tx);border:1px solid var(--line)}.btn.d{background:transparent;color:#ff8a8a;border:1px solid #5a2630}
+.row{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center}
+#msg{position:sticky;bottom:1rem;padding:.8rem 1rem;border-radius:10px;font-weight:500;display:none;margin-top:1rem}
+#msg.ok{display:block;background:#123d28;color:#7ff0b0;border:1px solid #1f7a4b}#msg.err{display:block;background:#4a1620;color:#ffb3bd;border:1px solid #8a2a3a}
+small{color:var(--mu)}summary{cursor:pointer;font-weight:600}
+@media(max-width:560px){.g{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="box">
+ <form class="card lock" id="lock"><img src="../assets/logo.png" alt="Build"><h2>Espace administration</h2>
+  <label for="code" style="text-align:left">Code d’accès</label><input id="code" type="password" autocomplete="current-password" required autofocus>
+  <div class="row" style="margin-top:1rem"><button class="btn" style="flex:1">Se connecter</button></div><div id="lerr" style="color:#ffb3bd;margin-top:.8rem"></div></form>
+
+ <div id="app" hidden>
+  <div class="top"><img src="../assets/logo.png" alt=""><h1>Administration</h1><a class="btn s" href="../" style="text-decoration:none">Voir le site</a><button class="btn s" id="out" type="button">Quitter</button></div>
+  <div class="card"><h2>Informations générales</h2>
+   <label for="f-name">Nom du site</label><input id="f-name">
+   <label for="f-tag">Texte d’accroche (page d’accueil)</label><textarea id="f-tag"></textarea>
+   <label for="f-disc">Lien d’invitation Discord (laisser vide si pas encore créé)</label><input id="f-disc" placeholder="https://discord.gg/xxxxxx"></div>
+  <div id="servers"></div>
+  <div class="row" style="margin-bottom:1rem"><button class="btn s" id="add" type="button">Ajouter un serveur</button></div>
+  <div class="card"><h2>Règlement</h2><small>Une section par thème, une règle par ligne.</small><div id="rules"></div><div class="row" style="margin-top:.8rem"><button class="btn s" id="addRule" type="button">Ajouter une section</button></div></div>
+  <div class="card"><h2>Boutique</h2>
+   <label for="s-intro">Texte d’introduction</label><textarea id="s-intro"></textarea>
+   <label for="s-note">Message d’information (ex. « La boutique ouvre bientôt »)</label><textarea id="s-note"></textarea>
+   <div id="ranks"></div><datalist id="dl"></datalist>
+   <div class="row" style="margin-top:.8rem"><button class="btn s" id="addRank" type="button">Ajouter un grade</button></div>
+   <small style="display:block;margin-top:.8rem">Aternos interdit de gagner de l’argent réel avec un serveur : garde des prix en monnaie du jeu tant que tu es chez eux, et laisse le lien de paiement vide.</small></div>
+  <div class="row"><button class="btn" id="save" type="button">Enregistrer pour tout le monde</button></div>
+  <details class="card" style="margin-top:1rem" id="gh"><summary>Connexion GitHub (une seule fois par appareil)</summary>
+   <small>Pour que les changements soient visibles par tous, le site écrit dans ton dépôt GitHub. Crée un token « fine-grained » limité à ce dépôt, avec la permission Contents : Read and write (voir le README). Il reste uniquement dans ce navigateur.</small>
+   <div class="g"><div><label for="c-repo">Dépôt (pseudo/nom)</label><input id="c-repo"></div><div><label for="c-br">Branche</label><input id="c-br" value="main"></div>
+   <div class="full"><label for="c-tok">Token GitHub</label><input id="c-tok" type="password" autocomplete="off" placeholder="github_pat_..."></div></div></details>
+  <div id="msg" role="status"></div>
+ </div>
+</div>
+<script>
+const HASH='d6e68f19c76a10db711da48158aabc35d4406b4e35d99686ecc26e0c64be471b';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+let SHA=null,DATA={servers:[]};
+function msg(t,c){const m=$('#msg');m.textContent=t;m.className=c;m.scrollIntoView({block:'nearest'})}
+const guess=()=>{const h=location.hostname;if(!h.endsWith('.github.io'))return'';const p=location.pathname.split('/')[1];return h.split('.')[0]+'/'+(p&&p!=='admin'?p:h)};
+const cfg=()=>({repo:$('#c-repo').value.trim(),branch:$('#c-br').value.trim()||'main',token:$('#c-tok').value.trim()});
+const b64=s=>btoa(String.fromCharCode(...new TextEncoder().encode(s)));
+const unb64=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g,'')),c=>c.charCodeAt(0)));
+const API=c=>`https://api.github.com/repos/${c.repo}/contents/data/site.json`;
+const H=c=>({Authorization:'Bearer '+c.token,Accept:'application/vnd.github+json'});
+
+$('#lock').onsubmit=async e=>{e.preventDefault();
+ if(await sha($('#code').value)===HASH){try{sessionStorage.setItem('ok','1')}catch(x){}open()}else{$('#lerr').textContent='Code incorrect.';$('#code').select()}};
+$('#out').onclick=()=>{try{sessionStorage.removeItem('ok')}catch(x){}location.reload()};
+
+async function open(){
+ $('#lock').hidden=true;$('#app').hidden=false;
+ $('#c-repo').value=ls.get('b_repo')||guess();$('#c-br').value=ls.get('b_br')||'main';$('#c-tok').value=ls.get('b_tok')||'';
+ const c=cfg();let ok=false;
+ if(c.repo&&c.token){try{const r=await fetch(API(c)+'?ref='+c.branch+'&t='+Date.now(),{headers:H(c)});if(r.ok){const j=await r.json();SHA=j.sha;DATA=JSON.parse(unb64(j.content));ok=true}else msg('Connexion GitHub refusée ('+r.status+'). Vérifie le dépôt et le token.','err')}catch(x){msg('GitHub est injoignable.','err')}}
+ if(!ok){try{DATA=await (await fetch('../data/site.json?'+Date.now())).json()}catch(x){}$('#gh').open=true;if(!c.token)msg('Renseigne ton token GitHub pour pouvoir enregistrer.','err')}
+ fill();
+}
+function fill(){$('#f-name').value=DATA.name||'';$('#f-tag').value=DATA.tagline||'';$('#f-disc').value=DATA.discord||'';
+ $('#servers').innerHTML=(DATA.servers||[]).map(card).join('');
+ $('#rules').innerHTML=(DATA.rules||[]).map(ruleCard).join('');
+ const sh=DATA.shop||{};$('#s-intro').value=sh.intro||'';$('#s-note').value=sh.notice||'';
+ $('#ranks').innerHTML=(sh.ranks||[]).map(rankCard).join('')}
+const del=(c,t)=>`<div class="row" style="margin-top:.8rem"><button type="button" class="btn d" onclick="this.closest('.${c}').remove()">${t}</button></div>`;
+const ruleCard=r=>`<fieldset class="card rs" style="border:1px solid var(--line);margin-top:.8rem"><label>Titre de la section</label><input data-k="title" value="${esc(r.title)}"><label>Règles (une par ligne)</label><textarea data-k="items" style="min-height:110px">${esc((r.items||[]).join('\n'))}</textarea>${del('rs','Supprimer la section')}</fieldset>`;
+const rankCard=r=>`<fieldset class="card rk" style="border:1px solid var(--line);margin-top:.8rem"><div class="g">
+ <div><label>Serveur (vide = tous les serveurs)</label><input data-k="server" list="dl" value="${esc(r.server)}"></div><div><label>Nom du grade</label><input data-k="name" value="${esc(r.name)}"></div>
+ <div><label>Prix (ex. 2 500 pièces)</label><input data-k="price" value="${esc(r.price)}"></div><div><label>Couleur</label><input data-k="color" type="color" value="${esc(r.color||'#2bb4ff')}"></div>
+ <div class="full"><label>Avantages (un par ligne)</label><textarea data-k="perks" style="min-height:100px">${esc((r.perks||[]).join('\n'))}</textarea></div>
+ <div class="full"><label>Lien de paiement (vide = « Bientôt disponible »)</label><input data-k="url" placeholder="https://..." value="${esc(r.url)}"></div></div>${del('rk','Supprimer ce grade')}</fieldset>`;
+$('#addRule').onclick=()=>$('#rules').insertAdjacentHTML('beforeend',ruleCard({}));
+$('#addRank').onclick=()=>$('#ranks').insertAdjacentHTML('beforeend',rankCard({color:'#2bb4ff'}));
+document.addEventListener('focusin',e=>{if(e.target.dataset&&e.target.dataset.k==='server')$('#dl').innerHTML=[...document.querySelectorAll('.srv [data-k=name]')].map(i=>`<option value="${esc(i.value)}">`).join('')});
+const card=(s,i)=>`<fieldset class="card srv" style="border:1px solid var(--line)"><legend style="padding:0 .5rem;font-weight:600">Serveur</legend><div class="g">
+ <div><label>Nom</label><input data-k="name" value="${esc(s.name)}"></div><div><label>Mode de jeu</label><input data-k="mode" value="${esc(s.mode)}"></div>
+ <div><label>Adresse IP</label><input data-k="ip" value="${esc(s.ip)}"></div><div><label>Version Minecraft</label><input data-k="version" value="${esc(s.version)}"></div>
+ <div><label>Icône (emoji)</label><input data-k="icon" value="${esc(s.icon)}" maxlength="4"></div><div><label>Couleur</label><input data-k="color" type="color" value="${esc(s.color||'#2bb4ff')}"></div>
+ <div class="full"><label>Description</label><textarea data-k="desc">${esc(s.desc)}</textarea></div></div>
+ <div class="row" style="margin-top:.8rem"><button type="button" class="btn d" onclick="this.closest('.srv').remove()">Supprimer ce serveur</button></div></fieldset>`;
+$('#add').onclick=()=>{$('#servers').insertAdjacentHTML('beforeend',card({icon:'⛏️',color:'#2bb4ff',version:(DATA.servers[0]||{}).version||''}))};
+function collect(){const servers=[...document.querySelectorAll('.srv')].map(f=>{const o={};f.querySelectorAll('[data-k]').forEach(i=>o[i.dataset.k]=i.value.trim());o.ip=o.ip.replace(/^https?:\/\//,'').replace(/\s/g,'');return o});
+ const lines=t=>t.split('\n').map(x=>x.trim()).filter(Boolean),grab=f=>{const o={};f.querySelectorAll('[data-k]').forEach(i=>o[i.dataset.k]=i.value.trim());return o};
+ const rules=[...document.querySelectorAll('.rs')].map(f=>{const o=grab(f);return{title:o.title,items:lines(o.items)}}).filter(r=>r.title||r.items.length);
+ const ranks=[...document.querySelectorAll('.rk')].map(f=>{const o=grab(f);return{...o,perks:lines(o.perks)}});
+ return{name:$('#f-name').value.trim()||'Build',tagline:$('#f-tag').value.trim(),discord:$('#f-disc').value.trim(),servers,rules,shop:{intro:$('#s-intro').value.trim(),notice:$('#s-note').value.trim(),ranks}}}
+$('#save').onclick=async()=>{
+ const c=cfg(),d=collect();
+ if(!c.repo||!c.token){$('#gh').open=true;return msg('Renseigne le dépôt et le token GitHub avant d’enregistrer.','err')}
+ if(d.servers.some(s=>!s.name||!s.ip))return msg('Chaque serveur doit avoir un nom et une adresse IP.','err');
+ if(d.discord&&!/^https:\/\//.test(d.discord))return msg('Le lien Discord doit commencer par https://','err');
+ if(d.shop.ranks.some(r=>!r.name))return msg('Chaque grade doit avoir un nom.','err');
+ if(d.shop.ranks.some(r=>r.url&&!/^https:\/\//.test(r.url)))return msg('Les liens de paiement doivent commencer par https://','err');
+ ls.set('b_repo',c.repo);ls.set('b_br',c.branch);ls.set('b_tok',c.token);
+ $('#save').disabled=true;msg('Enregistrement…','ok');
+ try{
+  const g=await fetch(API(c)+'?ref='+c.branch+'&t='+Date.now(),{headers:H(c)});
+  if(g.ok)SHA=(await g.json()).sha;else if(g.status!==404)throw new Error('Lecture refusée ('+g.status+')');
+  const r=await fetch(API(c),{method:'PUT',headers:H(c),body:JSON.stringify({message:'Mise à jour du site depuis /admin',content:b64(JSON.stringify(d,null,2)+'\n'),sha:SHA||undefined,branch:c.branch})});
+  if(!r.ok)throw new Error('Écriture refusée ('+r.status+'). Vérifie que le token a la permission Contents : Read and write.');
+  SHA=(await r.json()).content.sha;DATA=d;msg('Enregistré. Les changements seront visibles par tous d’ici 1 à 2 minutes.','ok');
+ }catch(x){msg(x.message,'err')}
+ $('#save').disabled=false};
+try{if(sessionStorage.getItem('ok')==='1')open()}catch(x){}
+</script>
+</body>
+</html>
